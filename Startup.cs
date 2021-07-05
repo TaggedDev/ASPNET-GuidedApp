@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using App.Service;
 
 namespace App
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
+        
         public void ConfigureServices(IServiceCollection services)
         {
             // Add MVC controllers and views support
@@ -23,6 +24,9 @@ namespace App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Binding appsettings.json config file. Project is a key string from the file
+            Configuration.Bind("Project", new Config());
+
             // The order of enabling services is important!
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage(); // Enable advanced errors logging on errors
